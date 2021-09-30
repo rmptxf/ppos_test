@@ -24,18 +24,51 @@ The sample supports the following development kit:
 
 nrf9160dk
 
-The sample also requires a `Nordic Thingy:52`_.
+The sample also requires a Nordic Thingy:52
 
-.. include:: /includes/spm.txt
+* For the nRF9160 DK, `hci_lpuart`_ must instead be programmed in the nRF52 board controller.
+* The sample is configured to compile and run as a non-secure application on nRF91's Cortex-M33. Therefore, it automatically includes the `secure_partition_manager`_ that prepares the required peripherals to be available for the application.
 
 User interface
 **************
 
 Two buttons and two switches are used to enter a pairing pattern to associate a specific development kit with an nRF Cloud user account.
 
-When the connection is established, set switch 2 to **N.C.** to send simulated GPS data to nRF Cloud once every 2 seconds.
+The application state is indicated by the LEDs.
 
-See the :ref:`asset_tracker_user_interface` in the :ref:`asset_tracker` documentation for detailed information about the different LED states used by the sample.
+.. list-table::
+   :header-rows: 1
+   :align: center
+
+   * - LTE LED 1 color
+     - State
+   * - Off
+     - Not connected to LTE carrier
+   * - Slow White Pulse
+     - Connecting to LTE carrier
+   * - Slow Yellow Pulse
+     - Associating with nRF Cloud
+   * - Slow Cyan Pulse
+     - Connecting to nRF Cloud
+   * - Solid Blue
+     - Connected, ready for BLE connections
+   * - Red Pulse
+     - Error
+
+.. list-table::
+   :header-rows: 1
+   :align: center
+
+   * - BLE LED 2 color
+     - State
+   * - Slow Purple Pulse
+     - Button being held; continue to hold to enter nRF52840 USB MCUboot update mode
+   * - Rapid Purple Pulse
+     - in nRF52840 USB MCUboot update mode
+   * - Slow Yellow Pulse
+     - Waiting for Bluetooth LE device to connect
+   * - Solid White
+     - Bluetooth LE connection established
 
 
 Building and running
@@ -76,7 +109,14 @@ You can program the main controller as follows:
 *   x **Clean Build Directory**
    
 3. Verify that the program was successful.
-   To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.   
+   To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.
+ 
+ Program The nRF9160 Modem Processor
+-----------------------------------
+
+`Modem Firmware v1.3.0`_
+
+For the nRF9160 DK you must also flash the modem firmware.  Version ``mfw_1.3.0`` or higher is required.  Program this using `nRF Connect Programmer`_ application.
 
 Testing
 =======
@@ -121,24 +161,26 @@ After programming the main controller with the sample, you can test it as follow
 Dependencies
 ************
 
-This sample uses the following |NCS| libraries:
+This application uses the following nRF Connect SDK libraries and drivers:
 
-* :ref:`lib_nrf_cloud`
-* ``drivers/gps_sim``
-* ``drivers/sensor/sensor_sim``
-* :ref:`dk_buttons_and_leds_readme`
-* :ref:`lte_lc_readme`
-* :ref:`uart_nrf_sw_lpuart`
+* `lib_nrf_cloud`_
+* `modem_info_readme`_
+* `at_cmd_parser_readme`_
+* ``lib/modem_lib``
+* `dk_buttons_and_leds_readme`_
+* ``drivers/lte_link_control``
+* ``drivers/flash``
+* ``bluetooth/gatt_dm``
+* ``bluetooth/scan``
 
-It uses the following `sdk-nrfxlib`_ library:
+From Zephyr:
+  * `zephyr:bluetooth_api`_
 
-* :ref:`nrfxlib:nrf_modem`
+In addition, it uses the Secure Partition Manager sample:
 
-It uses the following Zephyr library:
+* `secure_partition_manager`_
 
-* :ref:`zephyr:bluetooth_api`
+For nrf52840:
 
-It also uses the following samples:
-
-* :ref:`secure_partition_manager`
-* :ref:`bluetooth-hci-lpuart-sample`
+* `nrfcloud_gateway_controller`_
+* `hci_lpuart`_
