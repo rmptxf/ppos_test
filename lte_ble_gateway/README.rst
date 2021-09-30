@@ -1,6 +1,6 @@
 .. _lte_sensor_gateway:
 
-nRF9160: LTE Sensor Gateway
+nRF9160: PPOS LTE Sensor Gateway
 ###########################
 
 .. contents::
@@ -70,17 +70,21 @@ You can program the board controller as follows:
    In nRF9160 DK v0.9.0 and earlier, the switch is called **SW5**.
 #. Build the :ref:`bluetooth-hci-lpuart-sample` sample for the nrf9160dk_nrf52840 build target and program the board controller with it.
 #. Verify that the programming was successful.
-   Use a terminal emulator, like PuTTY, to connect to the second serial port and check the output.
-   See :ref:`putty` for the required settings.
+   Use a terminal emulator, like PuTTY, to connect to the second serial port and check the output.   
 
 After programming the board controller, you must program the main controller with the LTE Sensor Gateway sample, which also includes the :ref:`secure_partition_manager` sample.
 You can program the main controller as follows:
 
 1. Set the **SW5** switch, marked as *debug/prog*, in the **NRF91** position.
 #. Build the LTE Sensor Gateway sample (this sample) for the nrf9160dk_nrf9160_ns build target and program the main controller with it.
+   **nRF Connect SDK Release:** 1.7.0
+   **Projects:** lte_ble_gateway
+   **Board Name:** nrf9160dk_nrf9160_ns
+   **Build Directory** C:/Users/HPLaptop/ncs/v1.7.0/nrf/samples/zzppos-gateway/lte_ble_gateway/build
+   x **Clean Build Directory**
+   
 #. Verify that the program was successful.
-   To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.
-   See :ref:`putty` for the required settings.
+   To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.   
 
 Testing
 =======
