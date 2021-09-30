@@ -77,13 +77,14 @@ You can program the main controller as follows:
 
 1. Set the **SW5** switch, marked as *debug/prog*, in the **NRF91** position.
 #. Build the LTE Sensor Gateway sample (this sample) for the nrf9160dk_nrf9160_ns build target and program the main controller with it.
-   **nRF Connect SDK Release:** 1.7.0
-   **Projects:** lte_ble_gateway
-   **Board Name:** nrf9160dk_nrf9160_ns
-   **Build Directory** C:/Users/HPLaptop/ncs/v1.7.0/nrf/samples/zzppos-gateway/lte_ble_gateway/build
-   x **Clean Build Directory**
+
+*   **nRF Connect SDK Release:** 1.7.0
+*   **Projects:** lte_ble_gateway
+*   **Board Name:** nrf9160dk_nrf9160_ns
+*   **Build Directory** C:/Users/HPLaptop/ncs/v1.7.0/nrf/samples/zzppos-gateway/lte_ble_gateway/build
+*   x **Clean Build Directory**
    
-#. Verify that the program was successful.
+3. Verify that the program was successful.
    To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.   
 
 Testing
