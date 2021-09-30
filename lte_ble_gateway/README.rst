@@ -3,34 +3,26 @@
 nRF9160: PPOS LTE Sensor Gateway
 ###########################
 
-.. contents::
-   :local:
-   :depth: 2
-
-The LTE Sensor Gateway sample demonstrates how to transmit sensor data from an nRF9160 development kit to the `nRF Cloud`_.
-
-The sensor data is collected via Bluetooth® Low Energy, unlike the :ref:`asset_tracker` sample.
-Therefore, this sample acts as a gateway between the Bluetooth LE and the LTE connections to nRF Cloud.
+The nRF Cloud BLE Gateway uses the lib_nrf_cloud to connect an nRF9160-based board to nRF Cloud via LTE, connnect to multiple Bluetooth LE peripherals, and transmit their data to the cloud. Therefore, this application acts as a gateway between Bluetooth LE and the LTE connection to nRF Cloud.
 
 Overview
 *********
+The application uses the LTE link control driver to establish a network connection. It is then able to connect to multiple Bluetooth LE peripherals, and can then transmit the peripheral data to Nordic Semiconductor's cloud solution, nRF Cloud. The data is visualized in nRF Cloud's web interface.
 
 The sample connects via Bluetooth LE to a Thingy:52 running the factory pre-loaded application.
-When the connection is established, it starts collecting data from two sensors:
+When the connection is established, it starts collecting data from the Flip sensor:
 
 * The flip state of the Thingy:52
 
 The sample aggregates the sensor data in memory.
-You can then trigger an alarm that sends the aggregated data over LTE to `nRF Cloud`_ by flipping the Thingy:52, which causes a change in the flip state to ``UPSIDE_DOWN``.
+You can then trigger an alarm that sends the aggregated data over LTE to nRF Cloud by flipping the Thingy:52, which causes a change in the flip state to ``UPSIDE_DOWN``.
 
 Requirements
 ************
 
 The sample supports the following development kit:
 
-.. table-from-rows:: /includes/sample_board_rows.txt
-   :header: heading
-   :rows: nrf9160dk_nrf9160_ns
+nrf9160dk
 
 The sample also requires a `Nordic Thingy:52`_.
 
