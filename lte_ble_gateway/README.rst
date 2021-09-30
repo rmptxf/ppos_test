@@ -19,9 +19,8 @@ The sample connects via Bluetooth LE to a Thingy:52 running the factory pre-load
 When the connection is established, it starts collecting data from two sensors:
 
 * The flip state of the Thingy:52
-* The simulated GPS position data
 
-The sample aggregates the data from both sensors in memory.
+The sample aggregates the sensor data in memory.
 You can then trigger an alarm that sends the aggregated data over LTE to `nRF Cloud`_ by flipping the Thingy:52, which causes a change in the flip state to ``UPSIDE_DOWN``.
 
 Requirements
