@@ -10,10 +10,10 @@ Based on the `Zephyr sample <https://github.com/zephyrproject-rtos/zephyr/tree/m
 
 Requirements
 ************
-- Entropy source
-- Google IOT Cloud account
-- Google IOT Cloud credentials and required information
-- Cellular connectivity
+- Entropy source.
+- Google IOT Cloud account.
+- Google IOT Cloud credentials and required information.
+- Cellular connectivity.
 
 Building and Running
 ********************
@@ -34,13 +34,13 @@ Program the client private key:
     --client_private_key <device-id>-ec_private.pem \
     --sec_tag 10
 
-Download cloud-side certs (primary and backup).
+Download cloud-side certs (primary and backup):
 
 - `primary <https://pki.goog/gtsltsr/gtsltsr.crt>`_
 
 - `backup <https://pki.goog/gsr4/GSR4.crt>`_
 
-Convert cloud-side certs from binary (.crt) to text (.pem).
+Convert cloud-side certs from binary (.crt) to text (.pem):
 
 .. code-block:: bash
 
@@ -58,12 +58,12 @@ Program the cloud-side certs:
     --CA_cert GSR4.pem \
     --sec_tag 203
 
-Assign keys on Google Cloud IoT Core 
+Assign keys on Google Cloud IoT Core:
 
-- Device Details -> Assign Public Key 
-- Input Method: Enter Manually 
-- Public key format: ES256
-- Public key value: content of ``<device-id>-ec_public.pem``
+- Device Details -> Assign Public Key. 
+- Input Method: Enter Manually. 
+- Public key format: ES256.
+- Public key value: content of ``<device-id>-ec_public.pem``.
 
 Users will also be required to configure the following Kconfig options
 based on their Google Cloud IOT project.  The following values come
