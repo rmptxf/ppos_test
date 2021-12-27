@@ -34,13 +34,13 @@ Program the client private key:
     --client_private_key <device-id>-ec_private.pem \
     --sec_tag 10
 
-Download cloud-side certs (primary and backup)
+Download cloud-side certs (primary and backup).
 
 - `primary <https://pki.goog/gtsltsr/gtsltsr.crt>`_
 
 - `backup <https://pki.goog/gsr4/GSR4.crt>`_
 
-Convert cloud-side certs from binary to text
+Convert cloud-side certs from binary (.crt) to text (.pem).
 
 .. code-block:: bash
 
