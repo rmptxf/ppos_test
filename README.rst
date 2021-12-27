@@ -1,19 +1,12 @@
-.. _google-iot-mqtt-sample:
+.. _ppos-gateway:
 
-Google IOT MQTT Sample
+PPOS Gateway
 ######################
 
 Overview
 ********
 
 Based on the `Zephyr sample <https://github.com/zephyrproject-rtos/zephyr/tree/main/samples/net/cloud/google_iot_mqtt>`_, and adapted for nRF9160, leveraging modem features.
-
-This sample application demonstrates a "full stack" application.  This
-currently is able to:
-
-- Establish a TLS connection with the Google IOT Cloud servers
-- Publish data to the Google IOT Cloud
-- Send/Receive keep alive / pings from cloud server
 
 Requirements
 ************
@@ -37,7 +30,7 @@ Program the client private key:
 
 .. code-block:: bash
 
-  python3 cred.py \
+  python cred.py \
     --client_private_key <device-id>-ec_private.pem \
     --sec_tag 10
 
@@ -54,16 +47,14 @@ Convert cloud-side certs from binary to text
   openssl x509 -inform DER -outform PEM -in gtsltsr.crt -out gtsltsr.pem
   openssl x509 -inform DER -outform PEM -in GSR4.crt -out GSR4.pem
 
-NOTE: It is not necessary to change the certs to to ``"C-Style\n"`` formatting.
-
 Program the cloud-side certs:
 
 .. code-block:: bash
 
-  python3 cred.py \
+  python cred.py \
     --CA_cert gtsltsr.pem \
     --sec_tag 202
-  python3 cred.py \
+  python cred.py \
     --CA_cert GSR4.pem \
     --sec_tag 203
 
