@@ -1,37 +1,87 @@
-#
-# Copyright (c) 2018 Nordic Semiconductor
-#
-# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
-#
+mainmenu "ppos gateway application"
 
-config NCS_SAMPLES_DEFAULTS
-	bool "Enable NCS sample default settings"
-	default n
-	imply LOG
-	imply LOG_MINIMAL
-	imply ASSERT
-	imply ASSERT_NO_COND_INFO
-	imply ASSERT_NO_MSG_INFO
-	imply HW_STACK_PROTECTION if ARCH_HAS_STACK_PROTECTION
+config CLOUD_CLIENT_ID
+	string "Client ID string"
+	default "put client string here"
 	help
-	  Use the default configuration for NCS samples.
+	  Set required client string that matches Google Cloud project
 
-config NCS_SAMPLE_EMPTY_APP_CORE_CHILD_IMAGE
-	bool "Enable empty_app_core as a child image"
-	default n
-	depends on SOC_NRF5340_CPUNET
-	select PARTITION_MANAGER_ENABLED
+config CLOUD_AUDIENCE
+	string "Audience string"
+	default "put audience string here"
 	help
-	  Add the empty_app_core as a child image for the given sample.
-	  Used by samples that only require SOC_NRF5340_CPUNET.
+	  Set required audience string that matches Google Cloud project
 
-if LOG
+config CLOUD_PUB_TOPIC
+	string "Publish topic string"
+	default "put topic string here"
+	help
+	  Set publish topic string that matches Google Cloud project
 
-# LOG_DEFAULT_LEVEL is declared in Zephyr,
-# we declare it here for a second time, to set a different default.
-# Omit the `prompt` to prevent it from appearing twice in two diffent places.
+config CLOUD_SUB_TOPIC
+	string "Subscribe topic string"
+	default "put topic string here"
+	help
+	  Set subscribe topic string that matches Google Cloud project
 
-config LOG_DEFAULT_LEVEL
-	default 1 if NCS_SAMPLES_DEFAULTS
+config CLOUD_BROKER_HOSTNAME
+	string "Broker host name"
+	default "put broker host name string here"
+	help
+	  Set Google's mqtt host name string here
 
-endif # LOG
+config CLOUD_BROKER_PORT
+	int "Broker port number"
+	default 8883
+	help
+	  Set Google's mqtt port number here
+
+config PUBLISH_ID
+	int "Mqtt publish id"
+	default 123
+	help
+	  Set publish topic ID
+
+config SUBSCRIBE_ID
+	int "Mqtt subscribe id"
+	default 124
+	help
+	  Set subscribe topic ID
+
+config MQTT_MESSAGE_BUFFER_SIZE
+	int "MQTT message buffer size"
+	default 128
+
+config MQTT_PAYLOAD_BUFFER_SIZE
+	int "MQTT payload buffer size"
+	default 128
+
+config CLIENT_SEC_TAG
+	int "Security Tag ID for Client Private Key"
+	default 10
+	help
+	  Set sec_tag ID for Client Private Key
+
+config GOOGLE_CA_CERT_1_SEC_TAG
+	int "Security Tag ID for Google Minimal Cert 1"
+	default 202
+	help
+	  Set sec_tag ID for Google Minimal Cert 1
+
+config GOOGLE_CA_CERT_2_SEC_TAG
+	int "Security Tag ID for Google Minimal Cert 2"
+	default 203
+	help
+	  Set sec_tag ID for Google Minimal Cert 2
+
+config MQTT_TLS_SESSION_CACHING
+	bool "Enable TLS session caching"
+
+config MQTT_TLS_PEER_VERIFY
+	int "Set peer verification level"
+	default 2
+	help
+		Set to 0 for VERIFY_NONE, 1 for VERIFY_OPTIONAL, and 2 for
+		VERIFY_REQUIRED.
+
+source "Kconfig.zephyr"

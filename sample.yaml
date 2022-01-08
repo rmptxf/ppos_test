@@ -1,0 +1,7 @@
+sample:
+  description: PPOS Gateway application
+  name: ppos_gateway
+common:
+  tags: net mqtt cloud
+  harness: net
+  filter: TOOLCHAIN_HAS_NEWLIB == 1
