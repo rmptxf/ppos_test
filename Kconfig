@@ -1,87 +1,102 @@
-mainmenu "ppos gateway application"
+#
+# Copyright (c) 2018 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
 
-config CLOUD_CLIENT_ID
-	string "Client ID string"
-	default "put client string here"
-	help
-	  Set required client string that matches Google Cloud project
+menu "PPOS Gateway Settings"
 
-config CLOUD_AUDIENCE
-	string "Audience string"
-	default "put audience string here"
-	help
-	  Set required audience string that matches Google Cloud project
+config APP_VERSION
+	string "Application version"
+	default "v1.0.0"
 
-config CLOUD_PUB_TOPIC
-	string "Publish topic string"
-	default "put topic string here"
-	help
-	  Set publish topic string that matches Google Cloud project
+config PUBLICATION_INTERVAL_SECONDS
+	int "Interval in seconds that the sample will publish data"
+	default 60
 
-config CLOUD_SUB_TOPIC
-	string "Subscribe topic string"
-	default "put topic string here"
-	help
-	  Set subscribe topic string that matches Google Cloud project
+config CONNECTION_RETRY_TIMEOUT_SECONDS
+	int "Number of seconds between each GCP IoT connection retry"
+	default 30
 
-config CLOUD_BROKER_HOSTNAME
-	string "Broker host name"
-	default "put broker host name string here"
-	help
-	  Set Google's mqtt host name string here
+endmenu
 
-config CLOUD_BROKER_PORT
-	int "Broker port number"
-	default 8883
-	help
-	  Set Google's mqtt port number here
 
-config PUBLISH_ID
-	int "Mqtt publish id"
-	default 123
-	help
-	  Set publish topic ID
+config DATE_TIME_UPDATE_INTERVAL_SECONDS
+    int "Date time update interval, in seconds"
+    default 10
 
-config SUBSCRIBE_ID
-	int "Mqtt subscribe id"
-	default 124
-	help
-	  Set subscribe topic ID
+config GCLOUD_WATCHDOG_TIMEOUT_MSEC
+    int "Watchdog timeout in milliseconds"
+    default 10000
+    
+menuconfig DATE_TIME
+    bool "Date time library"
+    select AT_CMD
+    select SNTP
+    depends on BSD_LIBRARY
+
+menu "Environment sensors"
+
+    config TEMP_DEV_NAME
+        string "Temperature device name"
+        help
+            Device from which temperature data will be fetched and
+            sent to nRF Cloud.
+
+    config USE_BME680_BSEC
+        bool "Use Bosch BME680 BSEC lib"
+        default y
+        help
+            Enable use of Bosch BSEC library. The library itself is not a part of
+            NCS and must be downloaded from Bosch Sensortec.
+    
+    config BOSCH_BSEC_LIBRARY_PATH
+        string "Path to Bosch BSEC library folder"
+        default "$(ZEPHYR_BASE)/../nrf/ext/BSEC_1.4.7.4_Generic_Release"
+        help
+            Path to the folder where the Bosch BSEC library is placed.
+
+    config ENVIRONMENT_DATA_SEND_INTERVAL
+        int "Interval in seconds for sending environment data"
+        default 30
+        help
+            Interval between each sampling and sending of environment sensor data.
+            If the GPS is active, sensor data will not be sent before it is
+            stopped. The unit is seconds.
+    
+    config ENVIRONMENT_DATA_BACKOFF_TIME
+        int "Time to delay sending environment data if GPS active"
+        default 20
+        help
+            Time in seconds before retrying to send environment sensor data if
+            the GPS is active.
+
+endmenu # Environment sensors
+
+config PRINTK
+    bool "Send printk() to console"
+    default y
+    help
+        This option directs printk() debugging output to the supported
+        console device, rather than suppressing the generation
+        of printk() output entirely. Output is sent immediately, without
+        any mutual exclusion or buffering.
+
 
 config MQTT_MESSAGE_BUFFER_SIZE
-	int "MQTT message buffer size"
-	default 128
+    int "MQTT message buffer size"
+    default 256
 
 config MQTT_PAYLOAD_BUFFER_SIZE
-	int "MQTT payload buffer size"
-	default 128
+    int "MQTT payload buffer size"
+    default 256
 
-config CLIENT_SEC_TAG
-	int "Security Tag ID for Client Private Key"
-	default 10
-	help
-	  Set sec_tag ID for Client Private Key
+config GCLOUD_LOG_LEVEL
+    int "App log level"
+    default 4
+        
+# Include Zephyr's Kconfig
 
-config GOOGLE_CA_CERT_1_SEC_TAG
-	int "Security Tag ID for Google Minimal Cert 1"
-	default 202
-	help
-	  Set sec_tag ID for Google Minimal Cert 1
-
-config GOOGLE_CA_CERT_2_SEC_TAG
-	int "Security Tag ID for Google Minimal Cert 2"
-	default 203
-	help
-	  Set sec_tag ID for Google Minimal Cert 2
-
-config MQTT_TLS_SESSION_CACHING
-	bool "Enable TLS session caching"
-
-config MQTT_TLS_PEER_VERIFY
-	int "Set peer verification level"
-	default 2
-	help
-		Set to 0 for VERIFY_NONE, 1 for VERIFY_OPTIONAL, and 2 for
-		VERIFY_REQUIRED.
-
+menu "Zephyr Kernel"
 source "Kconfig.zephyr"
+endmenu

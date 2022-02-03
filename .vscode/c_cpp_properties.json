@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Users/Abdelali/ncs/v1.8.0",
+                "C:/Users/Abdelali/ncs/v1.8.0/zephyr/lib/libc/minimal/include",
+                "C:/Users/Abdelali/ncs/v1.8.0/nrf/include",
+                "C:/Users/Abdelali/ncs/v1.8.0/zephyr/include",
+                "C:/Users/Abdelali/ncs/v1.8.0/modules/lib/civetweb/examples/rest/cJSON"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "configurationProvider": "numaru.vscode-cmake-lite"
+        }
+    ],
+    "version": 4
+}

@@ -1,10 +1,24 @@
-# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright (c) 2018 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
 
 cmake_minimum_required(VERSION 3.20.0)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
-project(google_iot_mqtt)
+project(lte-ble-gateway)
 
-FILE(GLOB app_sources src/*.c)
-target_sources(app PRIVATE ${app_sources})
-zephyr_include_directories(${APPLICATION_SOURCE_DIR}/src/tls_config)
+# NORDIC SDK APP START
+target_sources(app PRIVATE src/main.c)
+# NORDIC SDK APP END
+zephyr_include_directories(src)
+
+target_sources(app PRIVATE src/aggregator.c)
+target_sources(app PRIVATE src/ble.c)
+target_sources(app PRIVATE src/gcloud.c)
+
+# Include application events and configuration headers
+zephyr_library_include_directories(
+  include
+)

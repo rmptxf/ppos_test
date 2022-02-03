@@ -1,102 +1,148 @@
-.. _ppos gateway app:
+.. _lte_sensor_gateway:
 
-PPOS gateway application
-######################
+nRF9160: LTE Sensor Gateway
+###########################
+
+.. contents::
+   :local:
+   :depth: 2
+
+The LTE Sensor Gateway sample demonstrates how to transmit sensor data from an nRF9160 development kit to the `nRF Cloud`_.
+
+The sensor data is collected using Bluetooth® Low Energy, unlike the :ref:`asset_tracker` sample.
+Therefore, this sample acts as a gateway between the Bluetooth LE and the LTE connections to nRF Cloud.
 
 Overview
-********
-This Application is currently able to:
+*********
 
-- Establish a TLS connection with the Google IOT Cloud servers
-- Publish data to the Google IOT Cloud
-- Send/Receive keep alive / pings from cloud server
+The sample connects using Bluetooth LE to a Thingy:52 running the factory pre-loaded application.
+When the connection is established, it starts collecting data from two sensors:
+
+* The flip state of the Thingy:52
+* The simulated GNSS position data
+
+The sample aggregates the data from both sensors in memory.
+You can then trigger an alarm that sends the aggregated data over LTE to `nRF Cloud`_ by flipping the Thingy:52, which causes a change in the flip state to ``UPSIDE_DOWN``.
 
 Requirements
 ************
-- Entropy source
-- Google IOT Cloud account
-- Google IOT Cloud credentials and required information
-- Cellular connectivity
 
-Building and Running
+The sample supports the following development kit:
+
+.. table-from-rows:: /includes/sample_board_rows.txt
+   :header: heading
+   :rows: nrf9160dk_nrf9160_ns
+
+The sample also requires a `Nordic Thingy:52`_.
+
+.. include:: /includes/spm.txt
+
+User interface
+**************
+
+Two buttons and two switches are used to enter a pairing pattern to associate a specific development kit with an nRF Cloud user account.
+
+When the connection is established, set switch 2 to **N.C.** to send simulated GNSS data to nRF Cloud once every 2 seconds.
+
+See the :ref:`asset_tracker_user_interface` in the :ref:`asset_tracker` documentation for detailed information about the different LED states used by the sample.
+
+
+Building and running
 ********************
-This application has been built and tested on the Nordic nRF9160-DK.
-ECDSA keys are required to authenticate to the Google IOT Cloud.
-The application includes a key creation script.
 
-Run ``bash create_keys.sh <device-id>`` in the
-``src/private_info/`` directory.
+.. |sample path| replace:: :file:`samples/nrf9160/lte_ble_gateway`
 
-Clone the `cred utility <https://github.com/inductivekickback/cred>`_ for programming credentials to the modem. 
+.. include:: /includes/build_and_run_nrf9160.txt
 
-Program the client private key:
 
-.. code-block:: bash
+Programming the sample
+======================
 
-  python cred.py \
-    --client_private_key <device-id>-ec_private.pem \
-    --sec_tag 10
+When you connect the nRF9160 development kit to your computer, three virtual serial ports of the USB CDC class should become available:
 
-Download cloud-side certs (primary and backup)
+* The first port is connected to the *main controller* on the development kit, the nRF9160.
+* The second port is connected to the *board controller* on the development kit, the nRF52840.
 
-- `primary <https://pki.goog/gtsltsr/gtsltsr.crt>`_
+You must program the *board controller* with the :ref:`bluetooth-hci-lpuart-sample` sample first, before programming the main controller with the LTE Sensor Gateway sample application.
+You can program the board controller as follows:
 
-- `backup <https://pki.goog/gsr4/GSR4.crt>`_
+1. Set the **SW10** switch, marked as debug/prog, in the **NRF52** position.
+   In nRF9160 DK v0.9.0 and earlier, the switch is called **SW5**.
+#. Build the :ref:`bluetooth-hci-lpuart-sample` sample for the nrf9160dk_nrf52840 build target and program the board controller with it.
+#. Verify that the programming was successful.
+   Use a terminal emulator, like PuTTY, to connect to the second serial port and check the output.
+   See :ref:`putty` for the required settings.
 
-Convert cloud-side certs from binary to text
+After programming the board controller, you must program the main controller with the LTE Sensor Gateway sample, which also includes the :ref:`secure_partition_manager` sample.
+You can program the main controller as follows:
 
-.. code-block:: bash
+1. Set the **SW5** switch, marked as *debug/prog*, in the **NRF91** position.
+#. Build the LTE Sensor Gateway sample (this sample) for the nrf9160dk_nrf9160_ns build target and program the main controller with it.
+#. Verify that the program was successful.
+   To do so, use a terminal emulator, like PuTTY, to connect to the first serial port and check the output.
+   See :ref:`putty` for the required settings.
 
-  openssl x509 -inform DER -outform PEM -in gtsltsr.crt -out gtsltsr.pem
-  openssl x509 -inform DER -outform PEM -in GSR4.crt -out GSR4.pem
+Testing
+=======
 
-NOTE: It is not necessary to change the certs to to ``"C-Style\n"`` formatting.
+After programming the main controller with the sample, you can test it as follows:
 
-Program the cloud-side certs:
+1. Power on your Thingy:52 and observe that it starts blinking blue.
+#. Open a web browser and navigate to https://nrfcloud.com/.
+   Follow the instructions to set up your account and to add an LTE device.
+   A pattern of switch and button actions is displayed on the webpage.
+#. Power on or reset the kit.
+#. Observe in the terminal window connected to the first serial port that the kit starts up in the Secure Partition Manager.
+   This is indicated by an output similar to the following lines:
 
-.. code-block:: bash
+   .. code-block:: console
 
-  python cred.py \
-    --CA_cert gtsltsr.pem \
-    --sec_tag 202
-  python cred.py \
-    --CA_cert GSR4.pem \
-    --sec_tag 203
+      SPM: prepare to jump to Non-Secure image
+      ***** Booting Zephyr OS v1.13.99 *****
 
-Assign keys on Google Cloud IoT Core 
+#. Observe that the message ``Application started`` is shown in the terminal window after the LTE link is established, to ensure that the application started.
+   This might take several minutes.
+#. Observe that LED 3 starts blinking as the connection to nRF Cloud is established.
+#. The first time you start the sample, pair the device to your account:
 
-- Device Details -> Assign Public Key 
-- Input Method: Enter Manually 
-- Public key format: ES256
-- Public key value: content of ``<device-id>-ec_public.pem``
+   a. Observe that both LED 3 and 4 start blinking, indicating that the pairing procedure has been initiated.
+   #. Follow the instructions on `nRF Cloud`_ and enter the displayed pattern.
+      In the terminal window, you can see the pattern that you have entered.
+   #. If the pattern is entered correctly, the kit and your nRF Cloud account are paired and the device reboots.
+      If the LEDs start blinking in pairs, check in the terminal window which error occurred.
+      The device must be power-cycled to restart the pairing procedure.
+   #. After reboot, the kit connects to nRF Cloud, and the pattern disappears from the web page.
+#. Observe that LED 4 is turned on to indicate that the connection is established.
+#. Observe that the device count on your nRF Cloud dashboard is incremented by one.
+#. Set switch 2 in the position marked as **N.C.** and observe that simulated GNSS data is sent to nRF Cloud.
+#. Make sure that the Thingy:52 has established a connection to the application.
+   This is indicated by its led blinking green.
+#. Flip the Thingy:52, with the USB port pointing upward, to trigger the sending of the sensor data to nRF Cloud.
+#. Select the device from your device list on nRF Cloud, and observe that the sensor data is received from the kit.
+#. Observe that the data is updated in nRF Cloud.
 
-Users will also be required to configure the following Kconfig options
-based on their Google Cloud IOT project.  The following values come
-from the Google Cloud Platform itself:
 
-- PROJECT_ID: When you select your project at the top of the UI, it
-  should have a "name", and there should be an ID field as well.  This
-  seems to be two words and a number, separated by hyphens.
-- REGION: The Region shows in the list of registries for your
-  registry.  And example is "us-central1".
-- REGISTRY_ID: Each registry has an id.  This is a string given when
-  creating the registry.
-- DEVICE_ID: A name given for each device.  When viewing the table of
-  devices, this will be shown.
+Dependencies
+************
 
-From these values, the config values can be set using the following
-template:
+This sample uses the following |NCS| libraries:
 
-.. code-block:: kconfig
+* :ref:`lib_nrf_cloud`
+* ``drivers/gps_sim``
+* ``drivers/sensor/sensor_sim``
+* :ref:`dk_buttons_and_leds_readme`
+* :ref:`lte_lc_readme`
+* :ref:`uart_nrf_sw_lpuart`
 
-   CLOUD_CLIENT_ID="projects/PROJECT_ID/locations/REGION/registries/REGISTRY_ID/devices/DEVICE_ID"
-   CLOUD_AUDIENCE="PROJECT_ID"
-   CLOUD_SUBSCRIBE_CONFIG="/devices/DEVICE_ID/config"
-   CLOUD_PUBLISH_TOPIC="/devices/DEVICE_ID/state"
+It uses the following `sdk-nrfxlib`_ library:
 
-See `Google Cloud MQTT Documentation
-<https://cloud.google.com/iot/docs/how-tos/mqtt-bridge>`_.
+* :ref:`nrfxlib:nrf_modem`
 
-References: 
+It uses the following Zephyr library:
 
-https://cloud.google.com/iot/docs/how-tos/mqtt-bridge
+* :ref:`zephyr:bluetooth_api`
+
+It also uses the following samples:
+
+* :ref:`secure_partition_manager`
+* :ref:`bluetooth-hci-lpuart-sample`
